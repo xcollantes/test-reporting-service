@@ -1,6 +1,8 @@
 import logging
-from flask import Flask
+from flask import Flask, request
 from google.cloud import pubsub_v1
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -8,12 +10,14 @@ app = Flask(__name__)
 @app.route("/", methods=["POST"])
 def intake():
     try:
-        report = requests.data
+        report = request.data
+        j = request.get_json()
         publish_message(report)
-        return 200
+        logging.info("Data from client: %s", j)
+        return "Thanks, recievied message. " + str(j)
     except Exception as e:
         logging.error(e)
-        return 500
+        return "ERROR"
 
 
 def publish_message(report):
@@ -24,4 +28,4 @@ def publish_message(report):
 
 
 if __name__ == "__main__":
-    app.run(port=80, host="0.0.0.0", debug=True)
+    app.run(port=8080, host="0.0.0.0", debug=True)
