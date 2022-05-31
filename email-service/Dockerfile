@@ -2,4 +2,4 @@ FROM python:3
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
-CMD python3 email.py
+CMD python3 email_service.py
